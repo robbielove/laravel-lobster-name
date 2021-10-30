@@ -10,11 +10,5 @@ public function getLobsterNameAttribute() {
 
 ?>
 
-@role('root')
-  <div class="four wide column">
-    <h4><i class="user icon"></i>Lobster Name</h4>
-  </div>
-  <div class="twelve wide column">
-    <h4>{{$user->lobster_name}}</h4>
-  </div>
-@endrole
+    <h4>Lobster Name</h4>
+    <h4><?php echo getLobsterNameAttribute() ?></h4>
