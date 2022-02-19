@@ -2,7 +2,7 @@
 
 namespace Robbielove\LobsterName\Traits;
 
-class HasLobsterName
+trait HasLobsterName
 {
     
     /**
