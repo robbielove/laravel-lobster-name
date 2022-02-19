@@ -1,5 +1,5 @@
 {
-    "name": "robbielove/lobster-name",
+    "name": "robbielove/laravel-lobster-name",
     "description": "A simple package to add traits to generate names",
     "type": "package",
     "license": "MIT",
