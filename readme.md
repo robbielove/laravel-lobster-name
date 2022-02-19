@@ -1,14 +1,32 @@
 # lobster-name
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Travis](https://img.shields.io/travis/robbielove/lobster-name.svg?style=flat-square)]()
-[![Total Downloads](https://img.shields.io/packagist/dt/robbielove/lobster-name.svg?style=flat-square)](https://packagist.org/packages/robbielove/lobster-name)
 
 ## Install
 `composer require robbielove/lobster-name`
 
 ## Usage
-Write a few lines about the usage of this package.
+Add the trait to your model:
+```php
+use RobbieLove\LobsterName\Traits\HasLobsterName;
+
+class User extends Model
+{
+    use HasLobsterName;
+}
+
+// use as attribute:
+
+$user = new User;
+$user->lobster_name;
+$user->dog_name;
+$user->doctor_name;
+$user->judge_name;
+$user->king_name;
+$user->queen_name;
+$user->initial_name;
+$user->backwards_name;
+```
 
 ## Testing
 Run the tests with:
