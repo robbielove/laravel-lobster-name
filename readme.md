@@ -3,7 +3,7 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 ## Install
-`composer require robbielove/lobster-name`
+`composer require robbielove/laravel-lobster-name`
 
 ## Usage
 Add the trait to your model:
