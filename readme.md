@@ -18,14 +18,14 @@ class User extends Model
 // use as attribute:
 
 $user = new User;
-$user->lobster_name;
-$user->dog_name;
-$user->doctor_name;
-$user->judge_name;
-$user->king_name;
-$user->queen_name;
-$user->initial_name;
-$user->backwards_name;
+$user->lobster_name; // Robbie Robster
+$user->dog_name; // Rob Dog
+$user->doctor_name; // Dr, Robbie
+$user->judge_name; // The Honorable Judge Robbie
+$user->king_name; // Your Highness, Robbie
+$user->queen_name; // Your Majesty, Robbie
+$user->initial_name; // R
+$user->backwards_name; // eibboR
 ```
 
 ## Testing
