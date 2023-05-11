@@ -108,6 +108,7 @@ trait HasLobsterName
     {
         return strrev($this->getNameColumnAttribute());
     }
+    
     /**
      *  Make a pirate name
      *  e.g. Captain Robbie
@@ -163,5 +164,83 @@ trait HasLobsterName
     {
         return 'Astro ' . $this->getNameColumnAttribute();
     }
+
+    /**
+     *  Make an anagram name
+     *
+     * @return string
+     */
+    public function getAnagramNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $nameArray = str_split($name);
+        shuffle($nameArray);
+        return implode('', $nameArray);
+    }
+
+    /**
+     *  Make a name with alternating uppercase and lowercase characters
+     *  e.g. RoBbIe
+     *
+     * @return string
+     */
+    public function getAlternatingCaseNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $nameArray = str_split($name);
+        foreach ($nameArray as $index => &$character) {
+            $character = $index % 2 === 0 ? strtoupper($character) : strtolower($character);
+        }
+        return implode('', $nameArray);
+    }
+
+    /**
+     *  Make a name with a random number of exclamation marks
+     *  e.g. Robbie!!!
+     *
+     * @return string
+     */
+    public function getExcitedNameAttribute(): string
+    {
+        $exclamations = str_repeat('!', rand(1, 5));
+        return $this->getNameColumnAttribute() . $exclamations;
+    }
+
+    /**
+     *  Make a name with reversed case
+     *  e.g. rOBBIE
+     *
+     * @return string
+     */
+    public function getReversedCaseNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $nameArray = str_split($name);
+        foreach ($nameArray as &$character) {
+            $character = ctype_upper($character) ? strtolower($character) : strtoupper($character);
+        }
+        return implode('', $nameArray);
+    }
+
+    /**
+     *  Make a name with vowels replaced by a random vowel
+     *  e.g. Rebbe
+     *
+     * @return string
+     */
+    public function getRandomVowelReplacedNameAttribute(): string
+    {
+        $vowels = ['a', 'e', 'i', 'o', 'u'];
+        $name = $this->getNameColumnAttribute();
+        $nameArray = str_split($name);
+        foreach ($nameArray as &$character) {
+            if (in_array(strtolower($character), $vowels)) {
+                $randomVowel = $vowels[array_rand($vowels)];
+                $character = ctype_upper($character) ? strtoupper($randomVowel) : strtolower($randomVowel);
+            }
+        }
+        return implode('', $nameArray);
+    }
+
 
 }
