@@ -449,12 +449,13 @@ trait HasLobsterName
         $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
         $onomatopoeia = $onomatopoeias[$firstLetter] ?? 'Unknown';
         return $this->getNameColumnAttribute() . ' the ' . $onomatopoeia;
-    }/**
- *  Generate a name in Pig Latin
- *  e.g. Robbie -> Obbieray
- *
- * @return string
- */
+    }
+    /**
+     *  Generate a name in Pig Latin
+     *  e.g. Robbie -> Obbieray
+     *
+     * @return string
+     */
     public function getInPigLatinNameAttribute(): string
     {
         $name = $this->getNameColumnAttribute();
