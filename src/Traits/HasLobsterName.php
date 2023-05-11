@@ -242,5 +242,103 @@ trait HasLobsterName
         return implode('', $nameArray);
     }
 
+    /**
+     *  Make a name with a random pattern of consonants and vowels
+     *  e.g. Rebco, Fimke
+     *
+     * @return string
+     */
+    public function getRandomPatternNameAttribute(): string
+    {
+        $vowels = ['a', 'e', 'i', 'o', 'u'];
+        $consonants = range('a', 'z');
+        $consonants = array_diff($consonants, $vowels);
+
+        $nameLength = strlen($this->getNameColumnAttribute());
+        $randomPatternName = '';
+
+        for ($i = 0; $i < $nameLength; $i++) {
+            $isVowel = rand(0, 1);
+            $newCharacter = $isVowel ? $vowels[array_rand($vowels)] : $consonants[array_rand($consonants)];
+            $randomPatternName .= $newCharacter;
+        }
+
+        return ucfirst($randomPatternName);
+    }
+
+    /**
+     *  Make a palindrome name
+     *  e.g. Robor, Elle
+     *
+     * @return string
+     */
+    public function getPalindromeNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $reversedName = strrev($name);
+        return $name . substr($reversedName, 1);
+    }
+
+    /**
+     *  Generate a name using a Caesar cipher with a random shift value
+     *  e.g. Tloiaa
+     *
+     * @return string
+     */
+    public function getCaesarCipherNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $shift = rand(1, 25);
+        $caesarCipherName = '';
+
+        foreach (str_split($name) as $char) {
+            if (ctype_alpha($char)) {
+                $isUpper = ctype_upper($char);
+                $base = $isUpper ? ord('A') : ord('a');
+                $char = chr((ord($char) - $base + $shift) % 26 + $base);
+            }
+            $caesarCipherName .= $char;
+        }
+
+        return $caesarCipherName;
+    }
+
+    /**
+     *  Make a name with a random emoji inserted after every character
+     *  e.g. R🦄o🌈b🍩b🍦i🍉e🌮
+     *
+     * @return string
+     */
+    public function getEmojiNameAttribute(): string
+    {
+        $emojis = ['🦄', '🌈', '🍩', '🍦', '🍉', '🌮', '🍕', '🚀', '🌟'];
+        $name = $this->getNameColumnAttribute();
+        $emojiName = '';
+
+        foreach (str_split($name) as $char) {
+            $emojiName .= $char . $emojis[array_rand($emojis)];
+        }
+
+        return $emojiName;
+    }
+
+    /**
+     *  Make a name with a random number of interspersed underscores
+     *  e.g. R_obb_ie
+     *
+     * @return string
+     */
+    public function getUnderscoreNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $underscoreName = '';
+
+        foreach (str_split($name) as $char) {
+            $underscoreName .= $char . str_repeat('_', rand(0, 2));
+        }
+
+        return rtrim($underscoreName, '_');
+    }
+
 
 }
