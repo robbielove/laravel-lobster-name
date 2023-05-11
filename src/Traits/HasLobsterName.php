@@ -449,5 +449,78 @@ trait HasLobsterName
         $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
         $onomatopoeia = $onomatopoeias[$firstLetter] ?? 'Unknown';
         return $this->getNameColumnAttribute() . ' the ' . $onomatopoeia;
+    }/**
+ *  Generate a name in Pig Latin
+ *  e.g. Robbie -> Obbieray
+ *
+ * @return string
+ */
+    public function getInPigLatinNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $firstLetter = strtolower(substr($name, 0, 1));
+
+        if (in_array($firstLetter, ['a', 'e', 'i', 'o', 'u'])) {
+            return $name . 'way';
+        } else {
+            return substr($name, 1) . $firstLetter . 'ay';
+        }
+    }
+
+    /**
+     *  Generate a name in Gibberish (insert "ob" after every consonant)
+     *  e.g. Robbie -> Robsobobbier
+     *
+     * @return string
+     */
+    public function getInGibberishNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $gibberishName = '';
+
+        foreach (str_split($name) as $char) {
+            $gibberishName .= $char;
+            if (!in_array(strtolower($char), ['a', 'e', 'i', 'o', 'u'])) {
+                $gibberishName .= 'ob';
+            }
+        }
+
+        return $gibberishName;
+    }
+
+    /**
+     *  Generate a name with double letters
+     *  e.g. Robbie -> RRoobbbbiiee
+     *
+     * @return string
+     */
+    public function getDoubleLettersNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $doubleLettersName = '';
+
+        foreach (str_split($name) as $char) {
+            $doubleLettersName .= $char . $char;
+        }
+
+        return $doubleLettersName;
+    }
+
+    /**
+     *  Generate a name with blank spaces between characters
+     *  e.g. Robbie -> "  R  o  b  b  i  e  "
+     *
+     * @return string
+     */
+    public function getBlankspaceNameAttribute(): string
+    {
+        $name = $this->getNameColumnAttribute();
+        $blankspaceName = '';
+
+        foreach (str_split($name) as $char) {
+            $blankspaceName .= '  ' . $char;
+        }
+
+        return $blankspaceName . '  ';
     }
 }

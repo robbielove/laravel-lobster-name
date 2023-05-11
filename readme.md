@@ -26,6 +26,30 @@ $user->king_name; // Your Highness, Robbie
 $user->queen_name; // Your Majesty, Robbie
 $user->initial_name; // R
 $user->backwards_name; // eibboR
+
+// New methods
+$user->pirate_name; // Captain Robbie
+$user->superhero_name; // Super Robbie
+$user->secret_agent_name; // Agent R
+$user->rapper_name; // Lil' Robbie
+$user->space_explorer_name; // Astro Robbie
+$user->anagram_name; // e.g. eobbiR
+$user->alternating_case_name; // RoBbIe
+$user->excited_name; // Robbie!!!
+$user->reversed_case_name; // rOBBIE
+$user->random_vowel_replaced_name; // e.g. Rebbe
+$user->random_pattern_name; // e.g. Rebco
+$user->palindrome_name; // e.g. Robor
+$user->caesar_cipher_name; // e.g. Tloiaa
+$user->emoji_name; // e.g. R🦄o🌈b🍩b🍦i🍉e🌮
+$user->underscore_name; // e.g. R_obb_ie
+$user->alliterative_name; // Robbie the Rabbit
+$user->rhyming_name; // e.g. Bobbie
+$user->onomatopoeia_name; // Robbie the Rumble
+$user->in_pig_latin_name; // Obbieray
+$user->in_gibberish_name; // Robsobobbier
+$user->double_letters_name; // RRoobbbbiiee
+$user->blankspace_name; // "  R  o  b  b  i  e  "
 ```
 
 ## Testing
