@@ -108,5 +108,60 @@ trait HasLobsterName
     {
         return strrev($this->getNameColumnAttribute());
     }
-    
+    /**
+     *  Make a pirate name
+     *  e.g. Captain Robbie
+     *
+     * @return string
+     */
+    public function getPirateNameAttribute(): string
+    {
+        return 'Captain ' . $this->getNameColumnAttribute();
+    }
+
+    /**
+     *  Make a superhero name
+     *  e.g. Super Robbie
+     *
+     * @return string
+     */
+    public function getSuperheroNameAttribute(): string
+    {
+        return 'Super ' . $this->getNameColumnAttribute();
+    }
+
+    /**
+     *  Make a secret agent name
+     *  e.g. Agent R
+     *
+     * @return string
+     */
+    public function getSecretAgentNameAttribute(): string
+    {
+        $initial = $this->getInitialNameAttribute();
+        return 'Agent ' . $initial;
+    }
+
+    /**
+     *  Make a rapper name
+     *  e.g. Lil' Robbie
+     *
+     * @return string
+     */
+    public function getRapperNameAttribute(): string
+    {
+        return "Lil' " . $this->getNameColumnAttribute();
+    }
+
+    /**
+     *  Make a space explorer name
+     *  e.g. Astro Robbie
+     *
+     * @return string
+     */
+    public function getSpaceExplorerNameAttribute(): string
+    {
+        return 'Astro ' . $this->getNameColumnAttribute();
+    }
+
 }
