@@ -340,5 +340,114 @@ trait HasLobsterName
         return rtrim($underscoreName, '_');
     }
 
+    /**
+     *  Generate a name with alliteration
+     *  e.g. Robbie the Rabbit, Sammy the Snake
+     *
+     * @return string
+     */
+    public function getAlliterativeNameAttribute(): string
+    {
+        $animals = [
+            'a' => 'Alligator',
+            'b' => 'Bear',
+            'c' => 'Cat',
+            'd' => 'Dog',
+            'e' => 'Elephant',
+            'f' => 'Fox',
+            'g' => 'Giraffe',
+            'h' => 'Horse',
+            'i' => 'Iguana',
+            'j' => 'Jaguar',
+            'k' => 'Kangaroo',
+            'l' => 'Lion',
+            'm' => 'Monkey',
+            'n' => 'Nightingale',
+            'o' => 'Ostrich',
+            'p' => 'Penguin',
+            'q' => 'Quail',
+            'r' => 'Rabbit',
+            's' => 'Snake',
+            't' => 'Tiger',
+            'u' => 'Urial',
+            'v' => 'Vulture',
+            'w' => 'Wolf',
+            'x' => 'X-ray Tetra',
+            'y' => 'Yak',
+            'z' => 'Zebra'
+        ];
 
+        $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
+        $animal = $animals[$firstLetter] ?? 'Unknown';
+        return $this->getNameColumnAttribute() . ' the ' . $animal;
+    }
+
+    /**
+     *  Generate a name that rhymes with the original name
+     *  e.g. Robbie -> Bobbie
+     *
+     * @return string
+     */
+    public function getRhymingNameAttribute(): string
+    {
+        $rhymePairs = [
+            ['b', 'r'], ['d', 'm'], ['f', 'l'], ['g', 'w'], ['j', 'p'], ['k', 't'], ['s', 'v'], ['x', 'z']
+        ];
+
+        $name = $this->getNameColumnAttribute();
+        $firstLetter = strtolower(substr($name, 0, 1));
+        $rhymingName = $name;
+
+        foreach ($rhymePairs as $pair) {
+            if (in_array($firstLetter, $pair)) {
+                $rhymingLetter = $firstLetter === $pair[0] ? $pair[1] : $pair[0];
+                $rhymingName = $rhymingLetter . substr($name, 1);
+                break;
+            }
+        }
+
+        return ucfirst($rhymingName);
+    }
+
+    /**
+     *  Generate a name with an onomatopoeia
+     *  e.g. Robbie the Rumble, Susie the Sizzle
+     *
+     * @return string
+     */
+    public function getOnomatopoeiaNameAttribute(): string
+    {
+        $onomatopoeias = [
+            'a' => 'Achoo',
+            'b' => 'Boom',
+            'c' => 'Crash',
+            'd' => 'Ding',
+            'e' => 'Eek',
+            'f' => 'Fizz',
+            'g' => 'Gurgle',
+            'h' => 'Hiss',
+            'i' => 'Ick',
+            'j' => 'Jingle',
+            'k' => 'Knock',
+            'l' => 'Laughter',
+            'm' => 'Murmur',
+            'n' => 'Natter',
+            'o' => 'Oink',
+            'p' => 'Pop',
+            'q' => 'Quack',
+            'r' => 'Rumble',
+            's' => 'Sizzle',
+            't' => 'Tinkle',
+            'u' => 'Ugh',
+            'v' => 'Vroom',
+            'w' => 'Wham',
+            'x' => 'Xenial',
+            'y' => 'Yelp',
+            'z' => 'Zing'
+        ];
+
+        $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
+        $onomatopoeia = $onomatopoeias[$firstLetter] ?? 'Unknown';
+        return $this->getNameColumnAttribute() . ' the ' . $onomatopoeia;
+    }
 }
