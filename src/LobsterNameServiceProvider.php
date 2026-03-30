@@ -3,26 +3,21 @@
 namespace Robbielove\LobsterName;
 
 use Illuminate\Support\ServiceProvider;
+use Robbielove\LobsterName\Commands\LobsterNameCommand;
 
 class LobsterNameServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
-        //
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                LobsterNameCommand::class,
+            ]);
+        }
     }
 }

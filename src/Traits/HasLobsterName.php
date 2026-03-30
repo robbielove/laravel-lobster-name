@@ -4,524 +4,465 @@ namespace Robbielove\LobsterName\Traits;
 
 trait HasLobsterName
 {
-    
     /**
-     * Return the name column for this model
-     * 
-     * @return mixed
-     */
-    public function getNameColumnAttribute()
-    {
-        return $this->name;
-    }
-    
-    /**
-     *  Take a first name and use the first letter
-     * to make a (L)obster name
-     * e.g. Sammy Sobster
+     * Override this in your model to use a different column.
      *
-     * @return string
+     * protected string $lobsterNameColumn = 'first_name';
+     */
+
+    /**
+     * Get the name value used for all name generation.
+     */
+    public function getLobsterSourceName(): string
+    {
+        $column = $this->lobsterNameColumn ?? 'name';
+
+        return $this->getAttribute($column) ?? '';
+    }
+
+    // ─── The OGs ─────────────────────────────────────────────
+
+    /**
+     * Lobster name: Sammy Sobster
      */
     public function getLobsterNameAttribute(): string
     {
-        $letter = substr($this->getNameColumnAttribute(), 0, 1);
-        
-        return $this->getNameColumnAttribute() . ' ' . ucfirst($letter) . 'obster';
+        $name = $this->getLobsterSourceName();
+        $letter = mb_substr($name, 0, 1);
+
+        return $name . ' ' . mb_strtoupper($letter) . 'obster';
     }
-    
+
     /**
-     *  Take a first name and use the first three letters
-     * to make a dog name
-     * e.g. Rob Dog
-     *
-     * @return string
+     * Dog name: Rob Dog
      */
     public function getDogNameAttribute(): string
     {
-        $letters = substr($this->getNameColumnAttribute(), 0, 3);
-        
-        return $letters . ' Dog';
+        return mb_substr($this->getLobsterSourceName(), 0, 3) . ' Dog';
     }
-    
+
     /**
-     *  Make a Doctor name
-     *  e.g. Dr. Robbie
-     *
-     * @return string
+     * Doctor name: Dr. Robbie
      */
     public function getDoctorNameAttribute(): string
     {
-        return 'Dr. ' . $this->getNameColumnAttribute();
+        return 'Dr. ' . $this->getLobsterSourceName();
     }
-    
+
     /**
-     *  Make a judge name
-     *  e.g. The Honourable Judge Robbie
-     *
-     * @return string
+     * Judge name: The Honourable Judge Robbie
      */
     public function getJudgeNameAttribute(): string
     {
-        return 'The Honourable Judge ' . $this->getNameColumnAttribute();
+        return 'The Honourable Judge ' . $this->getLobsterSourceName();
     }
-    
+
     /**
-     *  Make a King name
-     *  e.g. Your Highness Robbie
-     * 
-     * @return string
+     * King name: Your Highness, Robbie
      */
     public function getKingNameAttribute(): string
     {
-        return 'Your Highness ' . $this->getNameColumnAttribute();
+        return 'Your Highness, ' . $this->getLobsterSourceName();
     }
-    
+
     /**
-     *  Make a Queen name
-     *  e.g. Your Majesty Robbie
-     * 
-     * @return string
+     * Queen name: Your Majesty, Robbie
      */
     public function getQueenNameAttribute(): string
     {
-        return 'Your Majesty ' . $this->getNameColumnAttribute();
+        return 'Your Majesty, ' . $this->getLobsterSourceName();
     }
-    
+
     /**
-     *  Get the first initial of the name
-     *  e.g. R
-     * 
-     * @return string
+     * Initial: R
      */
     public function getInitialNameAttribute(): string
     {
-        return substr($this->getNameColumnAttribute(), 0, 1);
+        return mb_strtoupper(mb_substr($this->getLobsterSourceName(), 0, 1));
     }
-    
+
     /**
-     *  Get the backwards name
-     *  e.g. eibboR
-     * 
-     * @return string
+     * Backwards name: eibboR
      */
     public function getBackwardsNameAttribute(): string
     {
-        return strrev($this->getNameColumnAttribute());
+        return strrev($this->getLobsterSourceName());
     }
-    
+
+    // ─── The New Crew ────────────────────────────────────────
+
     /**
-     *  Make a pirate name
-     *  e.g. Captain Robbie
-     *
-     * @return string
+     * Pirate name: Captain Robbie Blacktide
      */
     public function getPirateNameAttribute(): string
     {
-        return 'Captain ' . $this->getNameColumnAttribute();
+        $suffixes = ['Blacktide', 'Redbeard', 'Saltfang', 'Ironhook', 'Stormborn', 'Deadwind', 'Sharktooth', 'Bonecrusher'];
+
+        return 'Captain ' . $this->getLobsterSourceName() . ' ' . $this->pickFromName($suffixes);
     }
 
     /**
-     *  Make a superhero name
-     *  e.g. Super Robbie
-     *
-     * @return string
+     * Ninja name: Shadow Robbie
      */
-    public function getSuperheroNameAttribute(): string
+    public function getNinjaNameAttribute(): string
     {
-        return 'Super ' . $this->getNameColumnAttribute();
+        $prefixes = ['Shadow', 'Silent', 'Ghost', 'Phantom', 'Whisper', 'Viper', 'Eclipse', 'Smoke'];
+
+        return $this->pickFromName($prefixes) . ' ' . $this->getLobsterSourceName();
     }
 
     /**
-     *  Make a secret agent name
-     *  e.g. Agent R
-     *
-     * @return string
+     * Wizard name: Robbie the Magnificent
      */
-    public function getSecretAgentNameAttribute(): string
+    public function getWizardNameAttribute(): string
     {
-        $initial = $this->getInitialNameAttribute();
+        $titles = ['the Magnificent', 'the Wise', 'the Arcane', 'the Eternal', 'the Unbroken', 'Spellweaver', 'Starfire', 'the Grey'];
+
+        return $this->getLobsterSourceName() . ' ' . $this->pickFromName($titles);
+    }
+
+    /**
+     * Rapper name: Lil Robbie
+     */
+    public function getRapperNameAttribute(): string
+    {
+        $prefixes = ['Lil', 'MC', 'Yung', 'Big', 'DJ', 'Notorious', 'Lil Yung', 'A$AP'];
+
+        return $this->pickFromName($prefixes) . ' ' . $this->getLobsterSourceName();
+    }
+
+    /**
+     * Spy name: Agent R
+     */
+    public function getSpyNameAttribute(): string
+    {
+        $initial = mb_strtoupper(mb_substr($this->getLobsterSourceName(), 0, 1));
+
         return 'Agent ' . $initial;
     }
 
     /**
-     *  Make a rapper name
-     *  e.g. Lil' Robbie
-     *
-     * @return string
+     * Chef name: Chef Robbie
      */
-    public function getRapperNameAttribute(): string
+    public function getChefNameAttribute(): string
     {
-        return "Lil' " . $this->getNameColumnAttribute();
+        return 'Chef ' . $this->getLobsterSourceName();
     }
 
     /**
-     *  Make a space explorer name
-     *  e.g. Astro Robbie
-     *
-     * @return string
+     * Wrestler name: The Robster
      */
-    public function getSpaceExplorerNameAttribute(): string
+    public function getWrestlerNameAttribute(): string
     {
-        return 'Astro ' . $this->getNameColumnAttribute();
+        $name = $this->getLobsterSourceName();
+        $short = mb_substr($name, 0, 3);
+
+        return 'The ' . $short . 'ster';
     }
 
     /**
-     *  Make an anagram name
-     *
-     * @return string
+     * Viking name: Robbie the Bold
      */
-    public function getAnagramNameAttribute(): string
+    public function getVikingNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $nameArray = str_split($name);
-        shuffle($nameArray);
-        return implode('', $nameArray);
+        $titles = ['the Bold', 'the Fearless', 'Bloodaxe', 'Ironside', 'the Ruthless', 'Thunderfist', 'Skulltaker', 'the Berserker'];
+
+        return $this->getLobsterSourceName() . ' ' . $this->pickFromName($titles);
     }
 
     /**
-     *  Make a name with alternating uppercase and lowercase characters
-     *  e.g. RoBbIe
-     *
-     * @return string
+     * Superhero name: The Incredible Robbie
      */
-    public function getAlternatingCaseNameAttribute(): string
+    public function getSuperheroNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $nameArray = str_split($name);
-        foreach ($nameArray as $index => &$character) {
-            $character = $index % 2 === 0 ? strtoupper($character) : strtolower($character);
-        }
-        return implode('', $nameArray);
+        $adjectives = ['Incredible', 'Amazing', 'Invincible', 'Mighty', 'Spectacular', 'Unstoppable', 'Cosmic', 'Ultimate'];
+
+        return 'The ' . $this->pickFromName($adjectives) . ' ' . $this->getLobsterSourceName();
     }
 
     /**
-     *  Make a name with a random number of exclamation marks
-     *  e.g. Robbie!!!
-     *
-     * @return string
+     * Villain name: Robbie the Destroyer
      */
-    public function getExcitedNameAttribute(): string
+    public function getVillainNameAttribute(): string
     {
-        $exclamations = str_repeat('!', rand(1, 5));
-        return $this->getNameColumnAttribute() . $exclamations;
+        $titles = ['the Destroyer', 'the Terrible', 'Doomclaw', 'Darkblade', 'the Merciless', 'Nightshade', 'Voidwalker', 'the Undying'];
+
+        return $this->getLobsterSourceName() . ' ' . $this->pickFromName($titles);
     }
 
     /**
-     *  Make a name with reversed case
-     *  e.g. rOBBIE
-     *
-     * @return string
+     * Cowboy name: Robbie "Quick Draw" McGraw
      */
-    public function getReversedCaseNameAttribute(): string
+    public function getCowboyNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $nameArray = str_split($name);
-        foreach ($nameArray as &$character) {
-            $character = ctype_upper($character) ? strtolower($character) : strtoupper($character);
-        }
-        return implode('', $nameArray);
+        $nicknames = ['Quick Draw', 'Dead Eye', 'Six Shot', 'Dusty', 'Lone Star', 'Sidewinder', 'Buckaroo', 'Sundown'];
+        $surnames = ['McGraw', 'Cassidy', 'Holliday', 'Oakley', 'McCoy', 'Dalton', 'Ringo', 'Earp'];
+
+        return $this->getLobsterSourceName() . ' "' . $this->pickFromName($nicknames) . '" ' . $this->pickFromName($surnames);
     }
 
     /**
-     *  Make a name with vowels replaced by a random vowel
-     *  e.g. Rebbe
-     *
-     * @return string
+     * Rockstar name: Robbie Thunderstrike
      */
-    public function getRandomVowelReplacedNameAttribute(): string
+    public function getRockstarNameAttribute(): string
     {
-        $vowels = ['a', 'e', 'i', 'o', 'u'];
-        $name = $this->getNameColumnAttribute();
-        $nameArray = str_split($name);
-        foreach ($nameArray as &$character) {
-            if (in_array(strtolower($character), $vowels)) {
-                $randomVowel = $vowels[array_rand($vowels)];
-                $character = ctype_upper($character) ? strtoupper($randomVowel) : strtolower($randomVowel);
-            }
-        }
-        return implode('', $nameArray);
+        $surnames = ['Thunderstrike', 'Vicious', 'Rotten', 'Mayhem', 'Havoc', 'Blaze', 'Riot', 'Shred'];
+
+        return $this->getLobsterSourceName() . ' ' . $this->pickFromName($surnames);
     }
 
     /**
-     *  Make a name with a random pattern of consonants and vowels
-     *  e.g. Rebco, Fimke
-     *
-     * @return string
+     * Mafia name: Robbie "The Lobster" Love
      */
-    public function getRandomPatternNameAttribute(): string
+    public function getMafiaNameAttribute(): string
     {
-        $vowels = ['a', 'e', 'i', 'o', 'u'];
-        $consonants = range('a', 'z');
-        $consonants = array_diff($consonants, $vowels);
+        $nicknames = ['The Lobster', 'The Hammer', 'Ice Pick', 'Two Times', 'The Bull', 'No Nose', 'Lucky', 'The Fixer'];
 
-        $nameLength = strlen($this->getNameColumnAttribute());
-        $randomPatternName = '';
-
-        for ($i = 0; $i < $nameLength; $i++) {
-            $isVowel = rand(0, 1);
-            $newCharacter = $isVowel ? $vowels[array_rand($vowels)] : $consonants[array_rand($consonants)];
-            $randomPatternName .= $newCharacter;
-        }
-
-        return ucfirst($randomPatternName);
+        return $this->getLobsterSourceName() . ' "' . $this->pickFromName($nicknames) . '"';
     }
 
     /**
-     *  Make a palindrome name
-     *  e.g. Robor, Elle
-     *
-     * @return string
+     * Detective name: Detective Robbie
      */
-    public function getPalindromeNameAttribute(): string
+    public function getDetectiveNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $reversedName = strrev($name);
-        return $name . substr($reversedName, 1);
+        return 'Detective ' . $this->getLobsterSourceName();
     }
 
     /**
-     *  Generate a name using a Caesar cipher with a random shift value
-     *  e.g. Tloiaa
-     *
-     * @return string
+     * Professor name: Professor Robbie
      */
-    public function getCaesarCipherNameAttribute(): string
+    public function getProfessorNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $shift = rand(1, 25);
-        $caesarCipherName = '';
+        return 'Professor ' . $this->getLobsterSourceName();
+    }
+
+    /**
+     * President name: President Robbie
+     */
+    public function getPresidentNameAttribute(): string
+    {
+        return 'President ' . $this->getLobsterSourceName();
+    }
+
+    /**
+     * Robot name: R-0881-E
+     */
+    public function getRobotNameAttribute(): string
+    {
+        $name = mb_strtoupper($this->getLobsterSourceName());
+        $digits = '';
 
         foreach (str_split($name) as $char) {
-            if (ctype_alpha($char)) {
-                $isUpper = ctype_upper($char);
-                $base = $isUpper ? ord('A') : ord('a');
-                $char = chr((ord($char) - $base + $shift) % 26 + $base);
-            }
-            $caesarCipherName .= $char;
+            $digits .= str_pad((string) ord($char), 2, '0', STR_PAD_LEFT);
         }
 
-        return $caesarCipherName;
+        $code = mb_substr($digits, 0, 4);
+
+        return mb_substr($name, 0, 1) . '-' . $code . '-' . mb_substr($name, -1, 1);
     }
 
     /**
-     *  Make a name with a random emoji inserted after every character
-     *  e.g. R🦄o🌈b🍩b🍦i🍉e🌮
-     *
-     * @return string
+     * Medieval name: Sir Robbie of the Realm
      */
-    public function getEmojiNameAttribute(): string
+    public function getMedievalNameAttribute(): string
     {
-        $emojis = ['🦄', '🌈', '🍩', '🍦', '🍉', '🌮', '🍕', '🚀', '🌟'];
-        $name = $this->getNameColumnAttribute();
-        $emojiName = '';
+        $realms = ['the Realm', 'Westmarch', 'Ironhold', 'Dragonmere', 'Thornwall', 'Ashenvale', 'Stormhaven', 'the North'];
 
-        foreach (str_split($name) as $char) {
-            $emojiName .= $char . $emojis[array_rand($emojis)];
-        }
-
-        return $emojiName;
+        return 'Sir ' . $this->getLobsterSourceName() . ' of ' . $this->pickFromName($realms);
     }
 
     /**
-     *  Make a name with a random number of interspersed underscores
-     *  e.g. R_obb_ie
-     *
-     * @return string
+     * Alien name: Zor-Robbie of Nebula X
      */
-    public function getUnderscoreNameAttribute(): string
+    public function getAlienNameAttribute(): string
     {
-        $name = $this->getNameColumnAttribute();
-        $underscoreName = '';
+        $prefixes = ['Zor', 'Xel', 'Kra', 'Vex', 'Nyx', 'Zyx', 'Quo', 'Zel'];
+        $nebulas = ['Nebula X', 'Andromeda', 'the Void', 'Sector 7', 'the Outer Rim', 'Kepler-442', 'the Dark Zone', 'Centauri'];
 
-        foreach (str_split($name) as $char) {
-            $underscoreName .= $char . str_repeat('_', rand(0, 2));
-        }
-
-        return rtrim($underscoreName, '_');
+        return $this->pickFromName($prefixes) . '-' . $this->getLobsterSourceName() . ' of ' . $this->pickFromName($nebulas);
     }
 
     /**
-     *  Generate a name with alliteration
-     *  e.g. Robbie the Rabbit, Sammy the Snake
-     *
-     * @return string
+     * Elf name: Robbiel Starwhisper
      */
-    public function getAlliterativeNameAttribute(): string
+    public function getElfNameAttribute(): string
     {
-        $animals = [
-            'a' => 'Alligator',
-            'b' => 'Bear',
-            'c' => 'Cat',
-            'd' => 'Dog',
-            'e' => 'Elephant',
-            'f' => 'Fox',
-            'g' => 'Giraffe',
-            'h' => 'Horse',
-            'i' => 'Iguana',
-            'j' => 'Jaguar',
-            'k' => 'Kangaroo',
-            'l' => 'Lion',
-            'm' => 'Monkey',
-            'n' => 'Nightingale',
-            'o' => 'Ostrich',
-            'p' => 'Penguin',
-            'q' => 'Quail',
-            'r' => 'Rabbit',
-            's' => 'Snake',
-            't' => 'Tiger',
-            'u' => 'Urial',
-            'v' => 'Vulture',
-            'w' => 'Wolf',
-            'x' => 'X-ray Tetra',
-            'y' => 'Yak',
-            'z' => 'Zebra'
+        $suffixes = ['Starwhisper', 'Moonweaver', 'Leafsong', 'Dawnstrider', 'Nightbloom', 'Silverwind', 'Sunshadow', 'Mistwalker'];
+
+        return $this->getLobsterSourceName() . 'iel ' . $this->pickFromName($suffixes);
+    }
+
+    /**
+     * Dwarf name: Robbin Stonebeard
+     */
+    public function getDwarfNameAttribute(): string
+    {
+        $suffixes = ['Stonebeard', 'Ironfoot', 'Goldvein', 'Forgehammer', 'Deepdelve', 'Granitfist', 'Coalblack', 'Rumblerock'];
+
+        return mb_substr($this->getLobsterSourceName(), 0, -1) . 'in ' . $this->pickFromName($suffixes);
+    }
+
+    /**
+     * Cat name: Robbie Whiskers
+     */
+    public function getCatNameAttribute(): string
+    {
+        $suffixes = ['Whiskers', 'Purrington', 'McFluffins', 'von Meow', 'Pawsworth', 'Snugglebottom', 'Fluffernutter', 'Biscuits'];
+
+        return $this->getLobsterSourceName() . ' ' . $this->pickFromName($suffixes);
+    }
+
+    /**
+     * Formal name: The Right Honourable Robbie
+     */
+    public function getFormalNameAttribute(): string
+    {
+        return 'The Right Honourable ' . $this->getLobsterSourceName();
+    }
+
+    /**
+     * Stage name: R.Love
+     */
+    public function getStageNameAttribute(): string
+    {
+        $initial = mb_strtoupper(mb_substr($this->getLobsterSourceName(), 0, 1));
+        $suffixes = ['Love', 'Star', 'Blaze', 'Storm', 'Nova', 'Vega', 'Cruz', 'Phoenix'];
+
+        return $initial . '.' . $this->pickFromName($suffixes);
+    }
+
+    /**
+     * Baby name: Widdle Wobbie
+     */
+    public function getBabyNameAttribute(): string
+    {
+        $name = $this->getLobsterSourceName();
+        $baby = str_ireplace(['r', 'l'], 'w', $name);
+
+        return 'Widdle ' . ucfirst($baby);
+    }
+
+    /**
+     * Shouting name: ROBBIE!!!
+     */
+    public function getShoutingNameAttribute(): string
+    {
+        return mb_strtoupper($this->getLobsterSourceName()) . '!!!';
+    }
+
+    /**
+     * Whisper name: ...robbie...
+     */
+    public function getWhisperNameAttribute(): string
+    {
+        return '...' . mb_strtolower($this->getLobsterSourceName()) . '...';
+    }
+
+    /**
+     * Acronym name: R.O.B.B.I.E.
+     */
+    public function getAcronymNameAttribute(): string
+    {
+        $letters = str_split(mb_strtoupper($this->getLobsterSourceName()));
+
+        return implode('.', $letters) . '.';
+    }
+
+    // ─── Meta Methods ────────────────────────────────────────
+
+    /**
+     * Get a random fun name.
+     */
+    public function getRandomNameAttribute(): string
+    {
+        $types = $this->getLobsterNameTypes();
+
+        return $this->getAttribute($types[array_rand($types)]);
+    }
+
+    /**
+     * Get ALL the names as an associative array.
+     */
+    public function getAllNamesAttribute(): array
+    {
+        $names = [];
+
+        foreach ($this->getLobsterNameTypes() as $type) {
+            $names[$type] = $this->getAttribute($type);
+        }
+
+        return $names;
+    }
+
+    /**
+     * Get a name card - a formatted string of all names.
+     */
+    public function getNameCardAttribute(): string
+    {
+        $lines = [];
+
+        foreach ($this->all_names as $type => $name) {
+            $label = ucwords(str_replace('_', ' ', $type));
+            $lines[] = "{$label}: {$name}";
+        }
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * List of all available name attribute keys.
+     */
+    public function getLobsterNameTypes(): array
+    {
+        return [
+            'lobster_name',
+            'dog_name',
+            'doctor_name',
+            'judge_name',
+            'king_name',
+            'queen_name',
+            'initial_name',
+            'backwards_name',
+            'pirate_name',
+            'ninja_name',
+            'wizard_name',
+            'rapper_name',
+            'spy_name',
+            'chef_name',
+            'wrestler_name',
+            'viking_name',
+            'superhero_name',
+            'villain_name',
+            'cowboy_name',
+            'rockstar_name',
+            'mafia_name',
+            'detective_name',
+            'professor_name',
+            'president_name',
+            'robot_name',
+            'medieval_name',
+            'alien_name',
+            'elf_name',
+            'dwarf_name',
+            'cat_name',
+            'formal_name',
+            'stage_name',
+            'baby_name',
+            'shouting_name',
+            'whisper_name',
+            'acronym_name',
         ];
-
-        $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
-        $animal = $animals[$firstLetter] ?? 'Unknown';
-        return $this->getNameColumnAttribute() . ' the ' . $animal;
     }
 
     /**
-     *  Generate a name that rhymes with the original name
-     *  e.g. Robbie -> Bobbie
-     *
-     * @return string
+     * Deterministically pick an item from an array based on the name.
+     * Same name always produces the same result - no randomness.
      */
-    public function getRhymingNameAttribute(): string
+    protected function pickFromName(array $options): string
     {
-        $rhymePairs = [
-            ['b', 'r'], ['d', 'm'], ['f', 'l'], ['g', 'w'], ['j', 'p'], ['k', 't'], ['s', 'v'], ['x', 'z']
-        ];
+        $hash = crc32($this->getLobsterSourceName());
 
-        $name = $this->getNameColumnAttribute();
-        $firstLetter = strtolower(substr($name, 0, 1));
-        $rhymingName = $name;
-
-        foreach ($rhymePairs as $pair) {
-            if (in_array($firstLetter, $pair)) {
-                $rhymingLetter = $firstLetter === $pair[0] ? $pair[1] : $pair[0];
-                $rhymingName = $rhymingLetter . substr($name, 1);
-                break;
-            }
-        }
-
-        return ucfirst($rhymingName);
-    }
-
-    /**
-     *  Generate a name with an onomatopoeia
-     *  e.g. Robbie the Rumble, Susie the Sizzle
-     *
-     * @return string
-     */
-    public function getOnomatopoeiaNameAttribute(): string
-    {
-        $onomatopoeias = [
-            'a' => 'Achoo',
-            'b' => 'Boom',
-            'c' => 'Crash',
-            'd' => 'Ding',
-            'e' => 'Eek',
-            'f' => 'Fizz',
-            'g' => 'Gurgle',
-            'h' => 'Hiss',
-            'i' => 'Ick',
-            'j' => 'Jingle',
-            'k' => 'Knock',
-            'l' => 'Laughter',
-            'm' => 'Murmur',
-            'n' => 'Natter',
-            'o' => 'Oink',
-            'p' => 'Pop',
-            'q' => 'Quack',
-            'r' => 'Rumble',
-            's' => 'Sizzle',
-            't' => 'Tinkle',
-            'u' => 'Ugh',
-            'v' => 'Vroom',
-            'w' => 'Wham',
-            'x' => 'Xenial',
-            'y' => 'Yelp',
-            'z' => 'Zing'
-        ];
-
-        $firstLetter = strtolower(substr($this->getNameColumnAttribute(), 0, 1));
-        $onomatopoeia = $onomatopoeias[$firstLetter] ?? 'Unknown';
-        return $this->getNameColumnAttribute() . ' the ' . $onomatopoeia;
-    }
-    /**
-     *  Generate a name in Pig Latin
-     *  e.g. Robbie -> Obbieray
-     *
-     * @return string
-     */
-    public function getInPigLatinNameAttribute(): string
-    {
-        $name = $this->getNameColumnAttribute();
-        $firstLetter = strtolower(substr($name, 0, 1));
-
-        if (in_array($firstLetter, ['a', 'e', 'i', 'o', 'u'])) {
-            return $name . 'way';
-        } else {
-            return substr($name, 1) . $firstLetter . 'ay';
-        }
-    }
-
-    /**
-     *  Generate a name in Gibberish (insert "ob" after every consonant)
-     *  e.g. Robbie -> Robsobobbier
-     *
-     * @return string
-     */
-    public function getInGibberishNameAttribute(): string
-    {
-        $name = $this->getNameColumnAttribute();
-        $gibberishName = '';
-
-        foreach (str_split($name) as $char) {
-            $gibberishName .= $char;
-            if (!in_array(strtolower($char), ['a', 'e', 'i', 'o', 'u'])) {
-                $gibberishName .= 'ob';
-            }
-        }
-
-        return $gibberishName;
-    }
-
-    /**
-     *  Generate a name with double letters
-     *  e.g. Robbie -> RRoobbbbiiee
-     *
-     * @return string
-     */
-    public function getDoubleLettersNameAttribute(): string
-    {
-        $name = $this->getNameColumnAttribute();
-        $doubleLettersName = '';
-
-        foreach (str_split($name) as $char) {
-            $doubleLettersName .= $char . $char;
-        }
-
-        return $doubleLettersName;
-    }
-
-    /**
-     *  Generate a name with blank spaces between characters
-     *  e.g. Robbie -> "  R  o  b  b  i  e  "
-     *
-     * @return string
-     */
-    public function getBlankspaceNameAttribute(): string
-    {
-        $name = $this->getNameColumnAttribute();
-        $blankspaceName = '';
-
-        foreach (str_split($name) as $char) {
-            $blankspaceName .= '  ' . $char;
-        }
-
-        return $blankspaceName . '  ';
+        return $options[abs($hash) % count($options)];
     }
 }
